@@ -1,0 +1,7 @@
+{
+  "mongoURI": "mongodb+srv://Mido:Mido@cluster0.atgzq.mongodb.net/<dbname>?retryWrites=true&w=majority",
+  "jwtSecret": "mysecrettoken",
+  "githubClientId": "f9f0e8cab0219b7bdc98",
+  "githubSecret": "1cbe4e7e8c9e5cccbe3daadc562435f07b65c3f7",
+  "githubToken": "6162f9c55dda70197b187983a30f0504e1b8fe24"
+}

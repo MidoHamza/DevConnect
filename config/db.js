@@ -5,16 +5,18 @@ const db = config.get('mongoURI');
 const connectDB = async () => {
   try {
     await mongoose.connect(db, {
-      // To Get Rid With The warnings
       useNewUrlParser: true,
-      useUnifiedTopology: true,
       useCreateIndex: true,
+      useFindAndModify: false,
+      useUnifiedTopology: true,
     });
-    console.log('MongoDB Connected ...');
+
+    console.log('MongoDB Connected...');
   } catch (err) {
     console.error(err.message);
-    // Exist process with failure
+    // Exit process with failure
     process.exit(1);
   }
 };
+
 module.exports = connectDB;

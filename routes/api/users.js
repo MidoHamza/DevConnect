@@ -16,11 +16,10 @@ router.post(
   '/',
   [
     check('name', 'Name is required').not().isEmpty(),
-
-    check('email', 'Please incluse a valid email').isEmail(),
+    check('email', 'Please include a valid email').isEmail(),
     check(
       'password',
-      'Please enter a password with 6 or more characters '
+      'Please enter a password with 6 or more characters'
     ).isLength({ min: 6 }),
   ],
   async (req, res) => {
@@ -30,9 +29,10 @@ router.post(
     }
 
     const { name, email, password } = req.body;
+
     try {
-      // See if user exists
       let user = await User.findOne({ email });
+
       if (user) {
         return res
           .status(400)
@@ -40,17 +40,32 @@ router.post(
       }
 
       // Get users gravatar
-      const avatar = gravatar.url(email, {
-        s: '200', // Size
-        r: 'pg', // Rating
-        d: 'mm', // Default
-      });
+      const avatar = normalize(
+        gravatar.url(email, {
+          s: '200',
+          r: 'pg',
+          d: 'mm',
+        }),
+        { forceHttps: true }
+      );
+
       user = new User({
         name,
         email,
         avatar,
         password,
       });
+      // const avatar = gravatar.url(email, {
+      //   s: '200', // Size
+      //   r: 'pg', // Rating
+      //   d: 'mm', // Default
+      // });
+      // user = new User({
+      //   name,
+      //   email,
+      //   avatar,
+      //   password,
+      // });
 
       // Encrypt password
       const salt = await bcrypt.genSalt(10);
@@ -59,18 +74,16 @@ router.post(
 
       await user.save();
 
-      // Return jsonwebtoken
       const payload = {
         user: {
           id: user.id,
         },
       };
+
       jwt.sign(
         payload,
         config.get('jwtSecret'),
-        {
-          expiresIn: 360000,
-        },
+        { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
           res.json({ token });
@@ -82,6 +95,7 @@ router.post(
     }
   }
 );
+
 module.exports = router;
 
 // router.post('/register', (req, res) => {
